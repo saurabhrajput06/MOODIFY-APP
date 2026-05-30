@@ -1,0 +1,33 @@
+  @use "sass:color";
+$primary-color: #6366f1; // Modern Indigo color
+$bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$white: #ffffff;
+$text-dark: #1f2937;
+$transition: all 0.2s ease;
+
+.button {
+        width: 100%;
+        padding: 0.8rem;
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: $transition;
+        margin-top: 1rem;
+
+        &:hover {
+     // Yeh file ke top par hona chahiye
+
+// Line 21 ko aise badal do:
+background-color: color.adjust($primary-color, $lightness: -10%);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        &:active {
+          scale: 0.98;
+        }
+      }
