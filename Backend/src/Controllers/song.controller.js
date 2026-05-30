@@ -8,24 +8,37 @@ async function uploadSong(req, res) {
     const { mood } = req.body
 
     const tags = id3.read(songBuffer)
+    console.log(tags);
 
-    const [ songFile, posterFile ] = await Promise.all([
+    const songTitle = tags.title || `song_${Date.now()}`;
+    const hasImage = !!(tags.image && tags.image.imageBuffer);
+
+    const uploadPromises = [
         storageService.uploadFile({
             buffer: songBuffer,
-            filename: tags.title + ".mp3",
+            filename: `${songTitle}.mp3`,
             folder: "/cohort-2/moodify/songs"
-        }),
-        storageService.uploadFile({
-            buffer: tags.image.imageBuffer,
-            filename: tags.title + ".jpeg",
-            folder: "/cohort-2/moodify/posters"
         })
-    ])
+    ];
+
+    if (hasImage) {
+        uploadPromises.push(
+            storageService.uploadFile({
+                buffer: tags.image.imageBuffer,
+                filename: `${songTitle}.jpeg`,
+                folder: "/cohort-2/moodify/posters"
+            })
+        );
+    }
+
+    const uploadResults = await Promise.all(uploadPromises);
+    const songFile = uploadResults[0];
+    const posterFile = hasImage ? uploadResults[1] : null;
 
     const song = await songModel.create({
-        title: tags.title,
+        title: songTitle,
         url: songFile.url,
-        posterUrl: posterFile.url,
+        posterUrl: posterFile ? posterFile.url : "",
         mood
     })
 
@@ -50,6 +63,8 @@ async function getSong(req, res) {
     })
 
 }
+
+
 
 
 module.exports = { uploadSong, getSong }
