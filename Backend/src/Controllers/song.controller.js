@@ -8,7 +8,7 @@ async function uploadSong(req, res) {
     const { mood } = req.body
 
     const tags = id3.read(songBuffer)
-    console.log(tags);
+    // console.log(tags);
 
     const songTitle = tags.title || `song_${Date.now()}`;
     const hasImage = !!(tags.image && tags.image.imageBuffer);
@@ -53,13 +53,12 @@ async function getSong(req, res) {
 
     const { mood } = req.query
 
-    const song = await songModel.findOne({
-        mood,
-    })
+    const songs = await songModel.find(mood ? { mood } : {})
 
     res.status(200).json({
-        message: "song fetched successfully.",
-        song,
+        message: "songs fetched successfully.",
+        song: songs[0] || null,
+        songs: songs || []
     })
 
 }

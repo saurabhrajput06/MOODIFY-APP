@@ -1,5 +1,5 @@
 import { AuthContext } from "../../../auth.context";
-import { login , register , getMe , logout } from "../../services/auth.api";
+import { login , register , getMe , logout } from "../services/auth.api";
 import {useContext, useEffect} from "react"
 
 

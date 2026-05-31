@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { detect , init } from "../utils/Utils";
+import { detect, init } from "../utils/Utils";
 
 
 export default function FaceExpression() {
@@ -7,10 +7,10 @@ export default function FaceExpression() {
     const landmarkerRef = useRef(null);
     const streamRef = useRef(null);
 
-    const [ expression, setExpression ] = useState("Detecting...");
+    const [expression, setExpression] = useState("Detecting...");
 
     useEffect(() => {
-        init({landmarkerRef,videoRef,streamRef});
+        init({ landmarkerRef, videoRef, streamRef });
 
         return () => {
             if (landmarkerRef.current) {
@@ -33,7 +33,7 @@ export default function FaceExpression() {
                 playsInline
             />
             <h2>{expression}</h2>
-            <button onClick={()=>{detect({landmarkerRef,videoRef,setExpression})}} >Detect expression</button>
+            <button onClick={() => { detect({ landmarkerRef, videoRef, setExpression }) }} >Detect expression</button>
         </div>
     );
 }
