@@ -34,8 +34,6 @@ async function authUser(req,res ,next){
             message:"Token invalid"
         })
     }
-   
-
 
 }
 
