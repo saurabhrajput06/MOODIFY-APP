@@ -5,17 +5,19 @@ export default function FaceExpression() {
     const videoRef = useRef(null);
     const landmarkerRef = useRef(null);
     const streamRef = useRef(null);
-    const isInitialized = useRef(false); // 👈 Yeh track rakhega ki ek baar chalne ke baad dobara na chale
+    
+    // 🚀 THE FIX: Yeh stop-signal lagayega taaki loop toot sake
+    const isInitializing = useRef(false); 
 
     const [expression, setExpression] = useState("Initializing Scanner...");
 
     useEffect(() => {
         const startCamera = async () => {
-            // Agar pehle se chal raha hai ya videoRef null hai, toh bilkul mat chalao
-            if (isInitialized.current || !videoRef.current) return;
+            // Agar video tag ready nahi hai ya pehle se init ho raha hai, toh laut jao
+            if (!videoRef.current || isInitializing.current) return;
 
             try {
-                isInitialized.current = true; // Block loop immediately
+                isInitializing.current = true; // Turnt gate band karo taaki loop na bane
                 setExpression("Loading MediaPipe models...");
                 
                 await init({ landmarkerRef, videoRef, streamRef });
@@ -24,14 +26,14 @@ export default function FaceExpression() {
             } catch (error) {
                 console.error("Webcam trigger fail:", error);
                 setExpression("Camera Error ❌");
-                isInitialized.current = false; // Error aaye toh reset karein
+                isInitializing.current = false; // Error aaye toh gate kholo retry ke liye
             }
         };
 
-        // DOM ko video tag render karne ka poora mauka do
+        // DOM ko render hone ke liye 300ms ka clean time denge
         const timer = setTimeout(() => {
             startCamera();
-        }, 500); // 500ms tak wait karega, bilkul safe
+        }, 300);
 
         return () => {
             clearTimeout(timer);
@@ -42,7 +44,7 @@ export default function FaceExpression() {
                 streamRef.current.getTracks().forEach((track) => track.stop());
             }
         };
-    }, []); // Hook empty rakho taaki component mount par sirf ek baar chale
+    }, []); // Empty array, strictly runs once
 
     return (
         <div style={{ textAlign: "center", padding: "20px" }}>
@@ -55,13 +57,14 @@ export default function FaceExpression() {
                     style={{ 
                         width: "400px", 
                         borderRadius: "12px", 
-                        transform: "scaleX(-1)", 
+                        transform: "scaleX(-1)", // Mirror effect
                         background: "#000" 
                     }}
                 />
             </div>
             <h2 style={{ color: "#fff", marginTop: "15px" }}>{expression}</h2>
             
+            {/* Tumhaara customized manual button system */}
             <button 
                 onClick={() => { detect({ landmarkerRef, videoRef, setExpression }) }}
                 style={{
