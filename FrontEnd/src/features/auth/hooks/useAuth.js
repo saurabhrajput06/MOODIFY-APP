@@ -67,10 +67,7 @@ async function handleLogin({username , email , password}){
    }
  }
 
- useEffect(() => {
-    
-    handleGetMe()
- },[] );
+
 
  return ({
     user , loading , handleRegister,handleLogin , handlelogout,handleGetMe

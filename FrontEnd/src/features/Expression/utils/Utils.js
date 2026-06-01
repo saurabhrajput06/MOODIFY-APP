@@ -5,31 +5,36 @@ import {
 
 
 export const init = async ({ landmarkerRef, videoRef, streamRef }) => {
-    const vision = await FilesetResolver.forVisionTasks(
-        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-    );
-
-    landmarkerRef.current = await FaceLandmarker.createFromOptions(
-        vision,
-        {
-            baseOptions: {
-                modelAssetPath:
-                    "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task"
-            },
-            outputFaceBlendshapes: true,
-            runningMode: "VIDEO",
-            numFaces: 1
-        }
-    );
     // 🚀 SAFETY CHECK: Agar video element abhi tak load nahi hua, toh yahi se laut jao
     if (!videoRef || !videoRef.current) {
         console.log("Video element abhi tak ready nahi hai, thoda intezar karo...");
         return; 
     }
 
-    streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
-    videoRef.current.srcObject = streamRef.current;
-    await videoRef.current.play();
+    if (!landmarkerRef.current) {
+        const vision = await FilesetResolver.forVisionTasks(
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+        );
+
+        landmarkerRef.current = await FaceLandmarker.createFromOptions(
+            vision,
+            {
+                baseOptions: {
+                    modelAssetPath:
+                        "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task"
+                },
+                outputFaceBlendshapes: true,
+                runningMode: "VIDEO",
+                numFaces: 1
+            }
+        );
+    }
+
+    if (!streamRef.current || !streamRef.current.active) {
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
+        videoRef.current.srcObject = streamRef.current;
+        await videoRef.current.play();
+    }
 };
 
 export const detect = ({ landmarkerRef, videoRef, setExpression }) => {
