@@ -5,40 +5,44 @@ export default function FaceExpression() {
     const videoRef = useRef(null);
     const landmarkerRef = useRef(null);
     const streamRef = useRef(null);
+    const isInitialized = useRef(false); // 👈 Yeh track rakhega ki ek baar chalne ke baad dobara na chale
 
     const [expression, setExpression] = useState("Initializing Scanner...");
 
     useEffect(() => {
         const startCamera = async () => {
-            // 🚀 Safety Check: Wait jab tak HTML ka video tag ready na ho jaye
-            if (!videoRef.current) return;
+            // Agar pehle se chal raha hai ya videoRef null hai, toh bilkul mat chalao
+            if (isInitialized.current || !videoRef.current) return;
 
             try {
+                isInitialized.current = true; // Block loop immediately
+                setExpression("Loading MediaPipe models...");
+                
                 await init({ landmarkerRef, videoRef, streamRef });
+                
                 setExpression("Camera Ready! Click below to scan.");
             } catch (error) {
                 console.error("Webcam trigger fail:", error);
                 setExpression("Camera Error ❌");
+                isInitialized.current = false; // Error aaye toh reset karein
             }
         };
 
-        // 100ms ka chota sa gap taaki DOM safely load ho jaye aur error na aaye
+        // DOM ko video tag render karne ka poora mauka do
         const timer = setTimeout(() => {
             startCamera();
-        }, 100);
+        }, 500); // 500ms tak wait karega, bilkul safe
 
         return () => {
             clearTimeout(timer);
-            
             if (landmarkerRef.current) {
                 landmarkerRef.current.close();
             }
-
             if (streamRef.current) {
                 streamRef.current.getTracks().forEach((track) => track.stop());
             }
         };
-    }, []);
+    }, []); // Hook empty rakho taaki component mount par sirf ek baar chale
 
     return (
         <div style={{ textAlign: "center", padding: "20px" }}>
@@ -51,14 +55,13 @@ export default function FaceExpression() {
                     style={{ 
                         width: "400px", 
                         borderRadius: "12px", 
-                        transform: "scaleX(-1)", // Mirror effect taaki use karne mein sahi lage
+                        transform: "scaleX(-1)", 
                         background: "#000" 
                     }}
                 />
             </div>
             <h2 style={{ color: "#fff", marginTop: "15px" }}>{expression}</h2>
             
-            {/* 🔥 Tumhaara pyara button as it is ready hai! */}
             <button 
                 onClick={() => { detect({ landmarkerRef, videoRef, setExpression }) }}
                 style={{
