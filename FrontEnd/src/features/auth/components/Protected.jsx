@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import React from 'react'
 
+import Loader from "../../shared/components/Loader";
+
 const Protected = ({children}) => {
 const {user ,loading}=useAuth()
 const navigate = useNavigate()
@@ -14,7 +16,7 @@ const navigate = useNavigate()
 
 
 if(loading){
-    return <h1>loading...</h1>
+    return <Loader />
    } 
    
 if (!user) {

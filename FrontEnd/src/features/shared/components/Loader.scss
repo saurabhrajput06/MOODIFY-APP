@@ -1,0 +1,277 @@
+// Loader stylesheet - Cyberpunk Glassmorphism Loader
+
+// Design Tokens (Matching Home)
+$bg-darkest: #090714;
+$bg-card: #130f26;
+$color-neon-pink: #f43f5e;
+$color-neon-cyan: #06b6d4;
+$color-neon-yellow: #eab308;
+$color-neon-purple: #7c3aed;
+$color-text-main: #f3f4f6;
+$color-text-muted: #9ca3af;
+
+.moodify-loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $bg-darkest;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999; // Topmost layering
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+
+  // Background neon flares (slow drifting & scaling animation)
+  .loader-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 1;
+
+    &.circle-purple {
+      width: 400px;
+      height: 400px;
+      background-color: $color-neon-purple;
+      top: -100px;
+      left: -100px;
+      animation: float-glow 8s infinite alternate ease-in-out;
+    }
+
+    &.circle-cyan {
+      width: 350px;
+      height: 350px;
+      background-color: $color-neon-cyan;
+      bottom: -80px;
+      right: -80px;
+      animation: float-glow 10s infinite alternate ease-in-out-reverse;
+    }
+
+    &.circle-pink {
+      width: 300px;
+      height: 300px;
+      background-color: $color-neon-pink;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse-glow 6s infinite alternate ease-in-out;
+    }
+  }
+
+  // Loader Glass Card
+  .loader-content-box {
+    position: relative;
+    z-index: 10;
+    width: 90%;
+    max-width: 420px;
+    background: rgba($bg-card, 0.7);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 2px solid $color-neon-purple;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    box-shadow: 6px 6px 0px $color-neon-pink, 0 20px 40px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+    animation: loader-card-intro 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  // Neon Spinning Vinyl Loader
+  .spinning-vinyl-loader {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background-color: #0c0a15;
+    border: 5px solid #1c182d;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: rotate-loader-vinyl 3s linear infinite;
+
+    .vinyl-groove {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 1px double rgba($color-neon-cyan, 0.15);
+
+      &.second {
+        width: 76px;
+        height: 76px;
+        border-color: rgba($color-neon-pink, 0.15);
+      }
+    }
+
+    .vinyl-center {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: $color-neon-yellow;
+      border: 4px solid #0c0a15;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px rgba($color-neon-yellow, 0.6);
+      z-index: 5;
+
+      .vinyl-logo {
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: #0c0a15;
+        line-height: 1;
+        margin-top: -1px;
+      }
+    }
+
+    // Outer glow effects orbiting or pulsing
+    .vinyl-glowing-ring {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: $color-neon-pink;
+      border-bottom-color: $color-neon-cyan;
+      animation: spin-glow-ring 1.5s linear infinite;
+    }
+  }
+
+  // Brand Name
+  .loader-brand {
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    color: $color-text-main;
+    margin: 0;
+
+    span {
+      color: $color-neon-yellow;
+      display: inline-block;
+      transform: rotate(-2deg);
+    }
+  }
+
+  // Status Text & Ellipsis
+  .loader-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 48px; // Prevent layout shifts on message changes
+
+    .status-text {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $color-neon-cyan;
+      letter-spacing: 0.5px;
+      animation: fade-shimmer 1.8s infinite alternate;
+      text-transform: uppercase;
+    }
+
+    .status-indicator {
+      display: flex;
+      gap: 6px;
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: $color-neon-pink;
+        animation: dot-jump 1.4s infinite ease-in-out;
+
+        &:nth-child(2) {
+          animation-delay: 0.2s;
+          background-color: $color-neon-yellow;
+        }
+        &:nth-child(3) {
+          animation-delay: 0.4s;
+          background-color: $color-neon-cyan;
+        }
+      }
+    }
+  }
+
+  // Equalizer visualizer decoration
+  .loader-visualizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 30px;
+
+    .visualizer-bar {
+      width: 4px;
+      height: 4px;
+      background-color: $color-neon-purple;
+      border-radius: 2px 2px 0 0;
+      animation: visualizer-dance 1s infinite alternate ease-in-out;
+
+      &:nth-child(1) { animation-delay: 0.1s; background-color: $color-neon-pink; }
+      &:nth-child(2) { animation-delay: 0.3s; background-color: $color-neon-cyan; }
+      &:nth-child(3) { animation-delay: 0.5s; background-color: $color-neon-yellow; }
+      &:nth-child(4) { animation-delay: 0.2s; background-color: $color-neon-purple; }
+      &:nth-child(5) { animation-delay: 0.4s; background-color: $color-neon-pink; }
+      &:nth-child(6) { animation-delay: 0.15s; background-color: $color-neon-cyan; }
+      &:nth-child(7) { animation-delay: 0.35s; background-color: $color-neon-yellow; }
+      &:nth-child(8) { animation-delay: 0.25s; background-color: $color-neon-purple; }
+    }
+  }
+}
+
+// Keyframes Definitions
+@keyframes rotate-loader-vinyl {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-glow-ring {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes float-glow {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 40px) scale(1.15); }
+}
+
+@keyframes float-glow-reverse {
+  0% { transform: translate(0, 0) scale(1.1); }
+  100% { transform: translate(-30px, -30px) scale(0.95); }
+}
+
+@keyframes pulse-glow {
+  0% { opacity: 0.1; transform: translate(-50%, -50%) scale(0.9); }
+  100% { opacity: 0.22; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes loader-card-intro {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fade-shimmer {
+  0% { opacity: 0.6; filter: brightness(0.9); }
+  100% { opacity: 1; filter: brightness(1.2); }
+}
+
+@keyframes dot-jump {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes visualizer-dance {
+  0% { height: 4px; }
+  100% { height: 26px; }
+}

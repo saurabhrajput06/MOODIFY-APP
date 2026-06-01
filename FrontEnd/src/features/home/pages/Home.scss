@@ -1151,6 +1151,155 @@ $brutalist-border-purple: 2px solid $color-neon-purple;
       }
     }
   }
+
+  // --- Premium Loading States & Skeleton Styles ---
+  
+  .album-cover-wrapper.loading {
+    border-color: $color-neon-purple;
+    animation: pulse-border 1.5s infinite alternate;
+  }
+
+  .album-cover-loading-shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba($bg-card, 0.4) 25%,
+      rgba($color-neon-purple, 0.15) 50%,
+      rgba($bg-card, 0.4) 75%
+    );
+    background-size: 400% 400%;
+    animation: shimmery-bg 2.5s infinite linear;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+
+    .shimmer-logo {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.08);
+      text-shadow: 0 0 10px rgba($color-neon-purple, 0.3);
+      animation: pulse-shimmer-logo 1.5s infinite ease-in-out;
+    }
+
+    .shimmer-pulse {
+      position: absolute;
+      width: 80%;
+      height: 80%;
+      border: 2px dashed rgba($color-neon-pink, 0.2);
+      border-radius: 50%;
+      animation: spin-vinyl 10s linear infinite;
+    }
+  }
+
+  .skeleton-text-line {
+    height: 16px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer-move 1.5s infinite linear;
+    border-radius: 4px;
+    margin: 0.25rem auto;
+
+    &.skeleton-title {
+      width: 65%;
+      height: 20px;
+      margin-bottom: 0.5rem;
+    }
+
+    &.skeleton-artist {
+      width: 45%;
+      height: 14px;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .skeleton-badge-pill {
+    width: 80px;
+    height: 22px;
+    border-radius: 20px;
+    margin: 0 auto;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer-move 1.5s infinite linear;
+  }
+
+  .tracklist-item.skeleton-item {
+    cursor: default;
+    pointer-events: none;
+    border: 2px dashed rgba(255, 255, 255, 0.04);
+    background-color: rgba(255, 255, 255, 0.01);
+
+    &:hover {
+      transform: none;
+    }
+
+    .skeleton-square {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      animation: skeleton-pulse 1.5s infinite ease-in-out;
+    }
+
+    .skeleton-line {
+      height: 12px;
+      width: 50%;
+      border-radius: 3px;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 25%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 75%
+      );
+      background-size: 200% 100%;
+      animation: skeleton-shimmer-move 1.5s infinite linear;
+    }
+
+    .skeleton-pill {
+      width: 50px;
+      height: 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      animation: skeleton-pulse 1.5s infinite ease-in-out;
+    }
+  }
+}
+
+// Add these keyframes at the root level alongside other keyframes
+@keyframes shimmery-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse-shimmer-logo {
+  0%, 100% { transform: scale(1); opacity: 0.15; }
+  50% { transform: scale(1.1); opacity: 0.55; }
+}
+
+@keyframes skeleton-shimmer-move {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
 // Animations Declarations

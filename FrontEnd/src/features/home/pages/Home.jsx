@@ -332,8 +332,13 @@ function Home() {
           <div className="player-container">
             {/* Interactive Album Sleeve & Sliding Vinyl */}
             <div className="album-vinyl-container">
-              <div className={`album-cover-wrapper ${currentMoodMapped}`}>
-                {activeSong?.posterUrl ? (
+              <div className={`album-cover-wrapper ${currentMoodMapped} ${isLoadingSong ? "loading" : ""}`}>
+                {isLoadingSong ? (
+                  <div className="album-cover-loading-shimmer">
+                    <div className="shimmer-logo">M</div>
+                    <div className="shimmer-pulse"></div>
+                  </div>
+                ) : activeSong?.posterUrl ? (
                   <img className="album-cover-img" src={activeSong.posterUrl} alt="Album Art" />
                 ) : (
                   <div className={`album-cover-placeholder ${currentMoodMapped}`}>
@@ -352,7 +357,7 @@ function Home() {
                 )}
               </div>
 
-              {playlist.length > 0 && (
+              {playlist.length > 0 && !isLoadingSong && (
                 <div className={`vinyl-disc ${isPlaying ? "playing" : ""}`}>
                   <div className="vinyl-grooves"></div>
                   <div className={`vinyl-center-label ${currentMoodMapped}`}>
@@ -381,15 +386,25 @@ function Home() {
 
             {/* Track Info */}
             <div className="track-details">
-              <div className="track-title" title={activeSong?.title || "Queue is Empty"}>
-                {isLoadingSong ? "Fetching tunes..." : (activeSong?.title || "No Track Loaded")}
-              </div>
-              <div className="track-artist">
-                {playlist.length === 0 ? "Upload songs in backend" : "Moodify Database"}
-              </div>
-              <span className={`track-mood-badge ${currentMoodMapped}`}>
-                Vibe: {currentMoodMapped}
-              </span>
+              {isLoadingSong ? (
+                <>
+                  <div className="skeleton-text-line skeleton-title"></div>
+                  <div className="skeleton-text-line skeleton-artist"></div>
+                  <div className="skeleton-badge-pill"></div>
+                </>
+              ) : (
+                <>
+                  <div className="track-title" title={activeSong?.title || "Queue is Empty"}>
+                    {activeSong?.title || "No Track Loaded"}
+                  </div>
+                  <div className="track-artist">
+                    {playlist.length === 0 ? "Upload songs in backend" : "Moodify Database"}
+                  </div>
+                  <span className={`track-mood-badge ${currentMoodMapped}`}>
+                    Vibe: {currentMoodMapped}
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Progress Bar */}
@@ -485,9 +500,29 @@ function Home() {
 
             {/* Scrolling Track List Queue */}
             <div className="tracklist-container">
-              <h4 className="tracklist-header">Playlist Queue ({playlist.length})</h4>
+              <h4 className="tracklist-header">
+                {isLoadingSong ? "Fetching Playlist..." : `Playlist Queue (${playlist.length})`}
+              </h4>
               <div className="tracklist-scroll">
-                {playlist.length === 0 ? (
+                {isLoadingSong ? (
+                  <>
+                    <div className="tracklist-item skeleton-item">
+                      <span className="track-index skeleton-square"></span>
+                      <span className="track-title-text skeleton-line"></span>
+                      <span className="track-badge skeleton-pill"></span>
+                    </div>
+                    <div className="tracklist-item skeleton-item">
+                      <span className="track-index skeleton-square"></span>
+                      <span className="track-title-text skeleton-line"></span>
+                      <span className="track-badge skeleton-pill"></span>
+                    </div>
+                    <div className="tracklist-item skeleton-item">
+                      <span className="track-index skeleton-square"></span>
+                      <span className="track-title-text skeleton-line"></span>
+                      <span className="track-badge skeleton-pill"></span>
+                    </div>
+                  </>
+                ) : playlist.length === 0 ? (
                   <div className="empty-tracklist-placeholder">
                     <p className="primary-text">No tracks for this vibe yet</p>
                     <p className="secondary-text">Upload .mp3 files with the mood tag "{currentMoodMapped}" to the database API to play them here.</p>
@@ -498,7 +533,7 @@ function Home() {
                     return (
                       <div
                         key={track._id || idx}
-                        className={`tracklist-item ${isActive ? "active" : ""}`}
+                        className={`tracklist-item ${isActive ? "active" : ""} ${currentMoodMapped}`}
                         onClick={() => {
                           setCurrentTrackIndex(idx)
                           setIsPlaying(true)
