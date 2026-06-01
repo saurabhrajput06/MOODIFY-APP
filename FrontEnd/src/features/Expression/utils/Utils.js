@@ -21,6 +21,11 @@ export const init = async ({ landmarkerRef, videoRef, streamRef }) => {
             numFaces: 1
         }
     );
+    // 🚀 SAFETY CHECK: Agar video element abhi tak load nahi hua, toh yahi se laut jao
+    if (!videoRef || !videoRef.current) {
+        console.log("Video element abhi tak ready nahi hai, thoda intezar karo...");
+        return; 
+    }
 
     streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
     videoRef.current.srcObject = streamRef.current;
